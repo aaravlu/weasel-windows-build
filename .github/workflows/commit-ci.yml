@@ -109,5 +109,9 @@ jobs:
           name: weasel-artifact-${{ env.git_ref_name }}
           if-no-files-found: error
           path: |
+            .\output\*.exe
+            .\output\*.dll
+            .\output\*\*.exe
+            .\output\*\*.dll
             .\x64\Release\*.exe
             .\x64\Release\*.dll
