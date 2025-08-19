@@ -1,59 +1,14 @@
 name: Commit CI
 
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - '*'
-    tags:
-      - '![0-9]+.*'
-    paths:
-      - '**/**'
-      - '!*.md'
-      - '!.gitignore'
-  pull_request:
+on: workflow_dispatch
 
 jobs:
-  lint:
-    runs-on: windows-2019
-    steps:
-      - name: Checkout last commit
-        uses: actions/checkout@v4
-      - name: Install llvm if necessary
-        shell: pwsh
-        run: |
-          $version = ""
-          if (Get-Command "clang-format" -ErrorAction SilentlyContinue){
-            $version = clang-format --version
-            $pat = ".*\s+(\d+\.\d+\.\d+)"
-            if ($version -match $pat) {
-              $version = $matches[1]
-            }
-          }
-          if ($version -ne "") {
-            Write-Host "clang-format version：$version"
-            if ([version]$version -ge [version]"18.1.6") {
-              Write-Host "clang-format OK"
-            } else {
-              Write-Host "clang-format vesion does not meet"
-              choco install llvm --version=18.1.6
-            }
-          } else {
-            Write-Host "clang-format not installed"
-            choco install llvm --version=18.1.6
-          }
-      - name: Code style lint
-        shell: bash
-        run: ./clang-format.sh -i
-
   build:
-    needs: lint
-    runs-on: windows-2019
+    runs-on: windows-2022
     env:
       boost_version: 1.84.0
       BOOST_ROOT: ${{ github.workspace }}\deps\boost_1_84_0
     steps:
-
       - name: Checkout last commit
         uses: actions/checkout@v4
         with:
@@ -113,66 +68,3 @@ jobs:
           path: |
             .\output\archives\weasel*.exe
             .\output\archives\debug_symbols.7z
-
-  xbuild:
-    needs: lint
-    runs-on: windows-2019
-    env:
-      boost_version: 1.84.0
-      BOOST_ROOT: ${{ github.workspace }}\deps\boost_1_84_0
-    steps:
-
-      - name: Checkout last commit
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-          fetch-depth: 0
-
-      - name: Fetch all tags
-        run: git fetch --tags
-
-      - name: Configure build environment
-        shell: bash
-        run: |
-          cp env.vs2019.bat env.bat
-          echo git_ref_name="$(git describe --always)" >> $GITHUB_ENV
-
-      - name: Cache Boost
-        id: cache-boost
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{ env.BOOST_ROOT }}
-          key: ${{ runner.os }}-boost-${{ env.boost_version }}
-
-      - name: Install Boost
-        if: steps.cache-boost.outputs.cache-hit != 'true'
-        shell: bash
-        run: |
-          ./install_boost.bat
-          ./build.bat boost arm64
-
-      # xmake 2.9.4 or later
-      - uses: xmake-io/github-action-setup-xmake@v1
-        with:
-          xmake-version: '2.9.4'
-          actions-cache-folder: '.xmake-cache'
-
-      - uses: ilammy/msvc-dev-cmd@v1
-
-      - name: Copy Rime files
-        shell: pwsh
-        run: |
-          .\github.install.bat
-
-      - name: Build data
-        run: |
-          $ErrorActionPreference = 'Stop'
-          .\build.bat data
-
-      - name: Build Weasel
-        id: build_weasel
-        shell: cmd
-        run: |
-          .\xbuild.bat arm64 installer
-
