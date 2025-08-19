@@ -64,6 +64,7 @@ jobs:
           Remove-Item -Path fd.zip
 
       - name: Find Boost .lib files
+        shell: cmd
         run: |
           fd lib
 
