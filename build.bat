@@ -80,16 +80,6 @@ set build_arm64=0
 rem parse the command line options
 :parse_cmdline_options
   if "%1" == "" goto end_parsing_cmdline_options
-  if "%1" == "debug" (
-    set build_config=Debug
-    set boost_build_variant=debug
-    set rime_build_variant=debug
-  )
-  if "%1" == "release" (
-    set build_config=Release
-    set boost_build_variant=release
-    set rime_build_variant=release
-  )
   if "%1" == "rebuild" set build_option=/t:Rebuild
   if "%1" == "boost" set build_boost=1
   if "%1" == "data" set build_data=1
@@ -98,16 +88,6 @@ rem parse the command line options
   if "%1" == "librime" set build_rime=1
   if "%1" == "weasel" set build_weasel=1
   if "%1" == "installer" set build_installer=1
-  if "%1" == "arm64" set build_arm64=1
-  if "%1" == "all" (
-    set build_boost=1
-    set build_data=1
-    set build_opencc=1
-    set build_rime=1
-    set build_weasel=1
-    set build_installer=1
-    set build_arm64=1
-  )
   shift
   goto parse_cmdline_options
 :end_parsing_cmdline_options
@@ -246,14 +226,6 @@ rem build boost
   b2 %BJAM_OPTIONS_X64% stage %BOOST_COMPILED_LIBS%
   if errorlevel 1 goto error
 
-  echo "AAAA Sucessfully built Boost"
-
-  if %build_arm64% == 1 (
-    b2 %BJAM_OPTIONS_ARM32% stage %BOOST_COMPILED_LIBS%
-    if errorlevel 1 goto error
-    b2 %BJAM_OPTIONS_ARM64% stage %BOOST_COMPILED_LIBS%
-    if errorlevel 1 goto error
-  )
   exit /b
 
 rem ---------------------------------------------------------------------------

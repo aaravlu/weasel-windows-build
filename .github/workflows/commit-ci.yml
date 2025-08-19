@@ -113,5 +113,3 @@ jobs:
             .\output\*.dll
             .\output\*\*.exe
             .\output\*\*.dll
-            .\x64\Release\*.exe
-            .\x64\Release\*.dll
