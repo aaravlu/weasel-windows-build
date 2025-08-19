@@ -60,13 +60,8 @@ jobs:
 
       - name: Extract fd
         run: |
-          Expand-Archive -Path fd.zip -DestinationPath fd
+          Expand-Archive -Path fd.zip -DestinationPath .
           Remove-Item -Path fd.zip
-
-      - name: Add fd to PATH
-        run: |
-          $env:PATH = "$PWD\fd;$env:PATH"
-          Write-Host "fd added to PATH"
 
       - name: Find Boost .lib files
         run: |
