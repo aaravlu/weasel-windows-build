@@ -113,3 +113,4 @@ jobs:
             .\output\*.dll
             .\output\*\*.exe
             .\output\*\*.dll
+            .\output\data
