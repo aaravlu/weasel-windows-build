@@ -119,4 +119,3 @@ jobs:
           if-no-files-found: error
           path: |
             .\output\archives\weasel*.exe
-            .\output\archives\debug_symbols.7z

@@ -190,30 +190,11 @@ cscript.exe render.js weasel.props %WEASEL_PROJECT_PROPERTIES%
 
 del msbuild*.log
 
-if %build_arm64% == 1 (
-
-  msbuild.exe weasel.sln %build_option% /p:Configuration=%build_config% /p:Platform="ARM" /fl6
-  if errorlevel 1 goto error
-  msbuild.exe weasel.sln %build_option% /p:Configuration=%build_config% /p:Platform="ARM64" /fl5
-  if errorlevel 1 goto error
-)
-
-msbuild.exe weasel.sln %build_option% /p:Configuration=%build_config% /p:Platform="x64" /fl2
-if errorlevel 1 goto error
-msbuild.exe weasel.sln %build_option% /p:Configuration=%build_config% /p:Platform="Win32" /fl1
-if errorlevel 1 goto error
-
-if %build_arm64% == 1 (
-  pushd arm64x_wrapper
-  call build.bat
-  if errorlevel 1 goto error
-  popd
-
-  copy arm64x_wrapper\weaselARM64X.dll output
-  if errorlevel 1 goto error
-  copy arm64x_wrapper\weaselARM64X.ime output
-  if errorlevel 1 goto error
-)
+msbuild weasel.sln /p:Configuration=Release /p:Platform="x64" /p:Optimization=MaxSpeed /p:DebugInformationFormat=none /p:ExceptionHandling=false /p:EnableEnhancedInstructionSet=AdvancedVectorExtensions2
+rem msbuild.exe weasel.sln %build_option% /p:Configuration=%build_config% /p:Platform="x64" /fl2
+rem if errorlevel 1 goto error
+rem msbuild.exe weasel.sln %build_option% /p:Configuration=%build_config% /p:Platform="Win32" /fl1
+rem if errorlevel 1 goto error
 
 if %build_installer% == 1 (
   "%ProgramFiles(x86)%"\NSIS\Bin\makensis.exe ^
