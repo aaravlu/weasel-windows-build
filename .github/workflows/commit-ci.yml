@@ -54,6 +54,9 @@ jobs:
           ./install_boost.bat
           ./build.bat boost
 
+      - name: Find Boost libs
+        run: dir /s /b D:\a\weasel-windows-build\weasel-windows-build\deps\boost\*.lib
+
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
