@@ -248,25 +248,25 @@ rem build boost
     link=static^
     runtime-link=static^
     --build-type=complete
-  
+
   set BJAM_OPTIONS_X86=%BJAM_OPTIONS_COMMON%^
     architecture=x86^
     address-model=32
-  
+
   set BJAM_OPTIONS_X64=%BJAM_OPTIONS_COMMON%^
     architecture=x86^
     address-model=64
-  
+
   set BJAM_OPTIONS_ARM32=%BJAM_OPTIONS_COMMON%^
     define=BOOST_USE_WINAPI_VERSION=0x0A00^
     architecture=arm^
     address-model=32
-  
+
   set BJAM_OPTIONS_ARM64=%BJAM_OPTIONS_COMMON%^
     define=BOOST_USE_WINAPI_VERSION=0x0A00^
     architecture=arm^
     address-model=64
-  
+
   cd /d %BOOST_ROOT%
   if not exist b2.exe call bootstrap.bat
   if errorlevel 1 goto error
@@ -274,7 +274,9 @@ rem build boost
   if errorlevel 1 goto error
   b2 %BJAM_OPTIONS_X64% stage %BOOST_COMPILED_LIBS%
   if errorlevel 1 goto error
-  
+
+  echo "AAAA Sucessfully built Boost"
+
   if %build_arm64% == 1 (
     b2 %BJAM_OPTIONS_ARM32% stage %BOOST_COMPILED_LIBS%
     if errorlevel 1 goto error
@@ -321,10 +323,10 @@ rem %2 : push | pop , push to backup when pop to restore
     deps\opencc\build ^
     deps\yaml-cpp\build ) do (
     if "%2"=="push" (
-      if exist %%a  move %%a %%a_%1 
+      if exist %%a  move %%a %%a_%1
     )
     if "%2"=="pop" (
-      if exist %%a_%1  move %%a_%1 %%a 
+      if exist %%a_%1  move %%a_%1 %%a
     )
   )
   popd

@@ -39,16 +39,7 @@ jobs:
           cp env.vs2022.bat env.bat
           echo git_ref_name="$(git describe --always)" >> $GITHUB_ENV
 
-      - name: Cache Boost
-        id: cache-boost
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{ env.BOOST_ROOT }}
-          key: ${{ runner.os }}-boost-${{ env.boost_version }}
-
       - name: Install Boost
-        if: steps.cache-boost.outputs.cache-hit != 'true'
         shell: bash
         run: |
           ./install_boost.bat
