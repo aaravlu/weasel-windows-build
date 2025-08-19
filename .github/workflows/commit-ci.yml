@@ -9,6 +9,19 @@ jobs:
       boost_version: 1.84.0
       BOOST_ROOT: ${{ github.workspace }}\deps\boost_1_84_0
     steps:
+      - name: Install Visual Studio Workload with ATL/MFC
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # 修改安装路径为默认 VS2022
+          $vsPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
+          & "$vsPath\Installer\vs_installer.exe" modify `
+            --installPath "$vsPath" `
+            --add Microsoft.VisualStudio.Component.VC.ATL `
+            --includeRecommended `
+            --quiet `
+            --norestart
+
       - name: Checkout last commit
         uses: actions/checkout@v4
         with:
