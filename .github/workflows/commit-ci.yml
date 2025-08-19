@@ -54,19 +54,9 @@ jobs:
           ./install_boost.bat
           ./build.bat boost
 
-      - name: Download fd
-        run: |
-          Invoke-WebRequest -Uri https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-x86_64-pc-windows-msvc.zip -OutFile fd.zip
-
-      - name: Extract fd
-        run: |
-          Expand-Archive -Path fd.zip -DestinationPath .
-          Remove-Item -Path fd.zip
-
       - name: Find Boost .lib files
-        shell: cmd
         run: |
-          fd lib
+          Get-ChildItem -Path . -File -Recurse -Filter "*.lib"
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
