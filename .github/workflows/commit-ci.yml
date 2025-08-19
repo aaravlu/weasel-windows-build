@@ -37,7 +37,7 @@ jobs:
         shell: bash
         run: |
           ./install_boost.bat
-          ./build.bat boost arm64
+          ./build.bat boost
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
@@ -53,7 +53,7 @@ jobs:
       - name: Build Weasel
         id: build_weasel
         run: |
-          .\build.bat arm64 installer
+          .\build.bat installer
 
       - name: Compress Debug Symbols
         shell: pwsh
