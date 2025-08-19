@@ -54,9 +54,23 @@ jobs:
           ./install_boost.bat
           ./build.bat boost
 
-      - name: Find Boost libs
-        shell: cmd
-        run: dir /s /b D:\a\weasel-windows-build\weasel-windows-build\deps\boost\*.lib
+      - name: Download fd
+        run: |
+          Invoke-WebRequest -Uri https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-x86_64-pc-windows-msvc.zip -OutFile fd.zip
+
+      - name: Extract fd
+        run: |
+          Expand-Archive -Path fd.zip -DestinationPath fd
+          Remove-Item -Path fd.zip
+
+      - name: Add fd to PATH
+        run: |
+          $env:PATH = "$PWD\fd;$env:PATH"
+          Write-Host "fd added to PATH"
+
+      - name: Find Boost .lib files
+        run: |
+          fd lib
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
