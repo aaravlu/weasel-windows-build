@@ -190,11 +190,7 @@ cscript.exe render.js weasel.props %WEASEL_PROJECT_PROPERTIES%
 
 del msbuild*.log
 
-msbuild weasel.sln /p:Configuration=Release /p:Platform="x64" /p:Optimization=MaxSpeed /p:DebugInformationFormat=none /p:ExceptionHandling=false /p:EnableEnhancedInstructionSet=AdvancedVectorExtensions2
-rem msbuild.exe weasel.sln %build_option% /p:Configuration=%build_config% /p:Platform="x64" /fl2
-rem if errorlevel 1 goto error
-rem msbuild.exe weasel.sln %build_option% /p:Configuration=%build_config% /p:Platform="Win32" /fl1
-rem if errorlevel 1 goto error
+msbuild.exe weasel.sln %build_option% /p:Configuration=Release /p:Platform="x64"
 
 if %build_installer% == 1 (
   "%ProgramFiles(x86)%"\NSIS\Bin\makensis.exe ^

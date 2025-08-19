@@ -80,10 +80,6 @@ jobs:
           ./install_boost.bat
           ./build.bat boost
 
-      - name: Find Boost .lib files
-        run: |
-          Get-ChildItem -Path . -File -Recurse -Filter "*boost*.lib"
-
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
@@ -107,15 +103,11 @@ jobs:
         run: |
           .\build.bat installer
 
-      - name: Compress Debug Symbols
-        shell: pwsh
-        run: |
-          output\7z.exe a -t7z "./output/archives/debug_symbols.7z" "output/*.pdb" -r
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: weasel-artifact-${{ env.git_ref_name }}
           if-no-files-found: error
           path: |
-            .\output\archives\weasel*.exe
+            .\x64\Release\*.exe
+            .\x64\Release\*.dll
